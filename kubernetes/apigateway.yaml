@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: apigateway
+spec:
+  selector:
+    app: tero
+    tier: backend
+    track: stable
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: apigateway
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apigateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tero
+  template:
+    metadata:
+      labels:
+        app: tero
+        tier: backend
+        track: stable
+    spec:
+      containers:
+        - image: terosaarikivi/apigateway:1.0.0
+          name: apigateway
+          ports:
+            - name: apigateway
+              containerPort: 8080
